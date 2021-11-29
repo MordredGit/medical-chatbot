@@ -1,4 +1,5 @@
 import pickle
+from re import S
 import pandas as pd
 import pyttsx3
 from sklearn import preprocessing
@@ -38,6 +39,8 @@ def getDescription():
         for row in csv_reader:
             _description = {row[0]: row[1]}
             description_list.update(_description)
+
+    # print(description_list.keys())
 
 
 def getSeverityDict():
@@ -97,7 +100,11 @@ def tree_to_code(tree, feature_names, reduced_data):
     ]
 
     chk_dis = ",".join(feature_names).split(",")
-    print(chk_dis[:-1])
+    rows = [[i for i in chk_dis[index: index + 5]]
+            for index in range(0, len(chk_dis) - 1, 5)]
+
+    from tabulate import tabulate
+    print(tabulate(rows))
     symptoms_present = []
 
     while True:
@@ -192,3 +199,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # getDescription()
