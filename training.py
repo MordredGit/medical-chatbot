@@ -24,11 +24,8 @@ y = le.transform(y)
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, test_size=0.33, random_state=42)
 
-# testx, testy = testing[cols], le.transform(testing['prognosis'])
-# print(testx.count(), x.count())
 clf = DecisionTreeClassifier().fit(x_train, y_train)
-# clf = RandomForestClassifier().fit(x_train, y_train)
-scores = cross_val_score(clf, x_test, y_test, cv=2)
+scores = cross_val_score(clf, x_test, y_test, cv=5)
 
 print(f'Training Score:  {clf.score(x, y)}')
 print(f"Testing Cross Validation Score: {scores.mean()}")
@@ -37,12 +34,12 @@ importances = clf.feature_importances_
 indices = np.argsort(importances)[::-1]
 features = cols
 
-# print(tree.export_text(clf))
-# fig = plt.figure()
-# _ = tree.plot_tree(clf,
-#                    feature_names=features,
-#                    filled=True, max_depth=5)
-# plt.show()
+print(tree.export_text(clf))
+fig = plt.figure()
+_ = tree.plot_tree(clf,
+                   feature_names=features,
+                   filled=True, max_depth=5)
+plt.show()
 print(f'{importances =}')
 print(f'{indices =}')
 print(f'{features =}')
