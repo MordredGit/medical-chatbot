@@ -1,10 +1,9 @@
+from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split, cross_val_score
 import pickle
 import warnings
@@ -38,8 +37,12 @@ importances = clf.feature_importances_
 indices = np.argsort(importances)[::-1]
 features = cols
 
-# tree.plot_tree(clf)
-
+# print(tree.export_text(clf))
+# fig = plt.figure()
+# _ = tree.plot_tree(clf,
+#                    feature_names=features,
+#                    filled=True, max_depth=5)
+# plt.show()
 print(f'{importances =}')
 print(f'{indices =}')
 print(f'{features =}')

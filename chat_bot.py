@@ -25,7 +25,7 @@ precautionDictionary = dict()
 def calc_condition(exp, days):
     sum = 0
     for item in exp:
-        sum = sum+severityDictionary[item]
+        sum = sum + severityDictionary[item]
     if((sum*days)/(len(exp)+1) > 13):
         print("You should take the consultation from doctor. ")
     else:
@@ -39,8 +39,6 @@ def getDescription():
         for row in csv_reader:
             _description = {row[0]: row[1]}
             description_list.update(_description)
-
-    # print(description_list.keys())
 
 
 def getSeverityDict():
@@ -98,7 +96,6 @@ def tree_to_code(tree, feature_names, reduced_data):
         feature_names[i] if i != _tree.TREE_UNDEFINED else "undefined!"
         for i in tree_.feature
     ]
-
     chk_dis = ",".join(feature_names).split(",")
     rows = [[i for i in chk_dis[index: index + 5]]
             for index in range(0, len(chk_dis) - 1, 5)]
@@ -117,11 +114,9 @@ def tree_to_code(tree, feature_names, reduced_data):
     print("Searches related to input: ")
     for num, it in enumerate(cnf_dis):
         print(num, ")", it)
-    if num != 0:
-        conf_inp = int(input(f"Select the one you meant (0 - {num}): "))
-    else:
-        conf_inp = 0
 
+    conf_inp = int(
+        input(f"Select the one you meant (0 - {num}): ")) if num != 0 else 0
     disease_input = cnf_dis[conf_inp]
 
     while True:
@@ -153,7 +148,6 @@ def tree_to_code(tree, feature_names, reduced_data):
             print("Are you experiencing any ")
             symptoms_exp = []
             for syms in list(symptoms_given):
-                inp = ""
                 print(syms, "? : ", end='')
                 while True:
                     inp = input("")
@@ -187,7 +181,6 @@ def main():
     getInfo()
     with open("trained_model", "rb") as model:
         clf = pickle.load(model)
-        # tree.plot_tree(clf)
         training = pd.read_csv('Training.csv')
         global le
         le.fit(training['prognosis'])
@@ -199,4 +192,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # getDescription()
