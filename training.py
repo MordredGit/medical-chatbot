@@ -11,9 +11,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 training = pd.read_csv('Training.csv')
-testing = pd.read_csv('Testing.csv')
-cols = training.columns
-cols = cols[:-1]
+cols = training.columns[:-1]
 x, y = training[cols], training['prognosis']
 
 # mapping strings to numbers
@@ -38,7 +36,7 @@ print(tree.export_text(clf))
 fig = plt.figure()
 _ = tree.plot_tree(clf,
                    feature_names=features,
-                   filled=True, max_depth=5)
+                   filled=True)
 plt.show()
 print(f'{importances =}')
 print(f'{indices =}')
