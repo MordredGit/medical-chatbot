@@ -60,19 +60,17 @@ def loadPrecDict():
             precDict.update(precElement)
 
 
-def treeToCode(tree, feature_names, reduced_data):
-    tree_ = tree.tree_
-    tree_feature_name = [
-        feature_names[i] if i != _tree.TREE_UNDEFINED else "undefined!"
-        for i in tree_.feature
-    ]
-    all_diseases = ",".join(feature_names).split(",")
+def treeToCode(tree, all_feature_names, reduced_data):
+    decisionTree = tree.tree_
+    tree_feature_name = [all_feature_names[i] if i !=
+                         _tree.TREE_UNDEFINED else "valueless" for i in decisionTree.feature]
+    all_diseases = ",".join(all_feature_names).split(",")
     rows = [[i for i in all_diseases[index: index + 5]]
             for index in range(0, len(all_diseases) - 3, 5)]
 
     from tabulate import tabulate
     print(tabulate(rows))
-    symptoms_present = []
+    all_symptoms_encountered = []
 
     while True:
         input_disease = input(
@@ -92,44 +90,43 @@ def treeToCode(tree, feature_names, reduced_data):
 
     while True:
         try:
-            num_days = int(
+            daysOfSymptoms = int(
                 input("From how many days are you experiencing the symptom ? : "))
             break
         except ValueError:
             print("Enter number of days.")
 
     def recurse(node, depth):
-        if tree_.feature[node] != _tree.TREE_UNDEFINED:
-            name = tree_feature_name[node]
-            threshold = tree_.threshold[node]
+        if decisionTree.feature[node] != _tree.TREE_UNDEFINED:
+            feature_name = tree_feature_name[node]
+            threshold = decisionTree.threshold[node]
 
-            val = 1 if name == disease_input else 0
+            val = 1 if feature_name == disease_input else 0
 
             if val <= threshold:
-                recurse(tree_.children_left[node], depth + 1)
+                recurse(decisionTree.children_left[node], depth + 1)
             else:
-                symptoms_present.append(name)
-                recurse(tree_.children_right[node], depth + 1)
+                all_symptoms_encountered.append(feature_name)
+                recurse(decisionTree.children_right[node], depth + 1)
         else:
-            present_disease = print_disease(tree_.value[node])
-            red_cols = reduced_data.columns
-            symptoms_given = red_cols[
+            present_disease = print_disease(decisionTree.value[node])
+            symptoms_given = reduced_data.columns[
                 reduced_data.loc[present_disease].values[0].nonzero()
             ]
-            print("Are you experiencing any ")
-            symptoms_exp = []
+            print("Experiencing the following symptoms?")
+            symptoms_experienced = []
             for syms in list(symptoms_given):
-                print(syms, "? : ", end='')
+                print(syms, "? :", end=' ')
                 while True:
                     inp = input("")
-                    if(inp == "yes" or inp == "no"):
+                    if inp in ("yes", "no"):
                         break
                     else:
-                        print("provide proper answers i.e. (yes/no) : ", end="")
+                        print("Answer yes or no:", end=" ")
                 if(inp == "yes"):
-                    symptoms_exp.append(syms)
+                    symptoms_experienced.append(syms)
 
-            calcCondition(symptoms_exp, num_days)
+            calcCondition(symptoms_experienced, daysOfSymptoms)
             print("You may have", present_disease[0])
             print(descList[present_disease[0]])
             precaution_list = precDict[present_disease[0]]
